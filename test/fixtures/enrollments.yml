@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  students: one
+  semesters: one
+  enrolled_at: 2024-06-25
+  completed_at: 2024-06-25
+  started_at: 2024-06-25
+  status: MyString
+
+two:
+  students: two
+  semesters: two
+  enrolled_at: 2024-06-25
+  completed_at: 2024-06-25
+  started_at: 2024-06-25
+  status: MyString

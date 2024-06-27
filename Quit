@@ -1,0 +1,31 @@
+=> 
+[[32m#<Test:0x000074f8b4f74028[0m
+  id: [34m[1m19[0m,
+  name: [31m[1m"[0m[31mIndroduction to computers Test 1[0m[31m[1m"[0m,
+  description: [31m[1m"[0m[31mThis is the temp test[0m[31m[1m"[0m,
+  course_id: [34m[1m1[0m,
+  semester_id: [34m[1m57[0m,
+  instructor_id: [34m[1m4[0m,
+  max_score: [34m[1m100[0m,
+  created_at: [31m[1m"[0m[31m2024-06-26 10:29:40.619289000 +0000[0m[31m[1m"[0m,
+  updated_at: [31m[1m"[0m[31m2024-06-26 10:29:40.619289000 +0000[0m[31m[1m"[0m[32m>[0m,
+ [32m#<Test:0x000074f8b5dd2e58[0m
+  id: [34m[1m20[0m,
+  name: [31m[1m"[0m[31mIndroduction to computers Test 1[0m[31m[1m"[0m,
+  description: [31m[1m"[0m[31mThis is the temp test[0m[31m[1m"[0m,
+  course_id: [34m[1m1[0m,
+  semester_id: [34m[1m57[0m,
+  instructor_id: [34m[1m4[0m,
+  max_score: [34m[1m100[0m,
+  created_at: [31m[1m"[0m[31m2024-06-26 10:30:49.217812000 +0000[0m[31m[1m"[0m,
+  updated_at: [31m[1m"[0m[31m2024-06-26 10:30:49.217812000 +0000[0m[31m[1m"[0m[32m>[0m,
+ [32m#<Test:0x000074f8b5dd2d18[0m
+  id: [34m[1m21[0m,
+  name: [31m[1m"[0m[31mIndroduction to computers Test 1[0m[31m[1m"[0m,
+  description: [31m[1m"[0m[31mThis is the temp test[0m[31m[1m"[0m,
+  course_id: [34m[1m1[0m,
+  semester_id: [34m[1m57[0m,
+  instructor_id: [34m[1m4[0m,
+  max_score: [34m[1m100[0m,
+  created_at: [31m[1m"[0m[31m2024-06-26 10:31:27.057614000 +0000[0m[31m[1m"[0m,
+  updated_at: [31m[1m"[0m[31m2024-06-26 10:31:27.057614000 +0000[0m[31m[1m"[0m[32m>[0m]
