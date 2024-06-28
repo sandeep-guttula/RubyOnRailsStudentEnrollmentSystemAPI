@@ -34,13 +34,13 @@ class Api::V1::Sems::Departments < Grape::API
     desc "Create department"
     params do
       requires :name, type: String
+      requires :description, type: String
     end
     post do
-      department = Department.new(
-        name: params[:name]
-      )
-      if department.save
-        { message: "Department created successfully" }
+      authorize_admin!
+      department = Department.new.create_department(params)
+      if department.is_a?(Department)
+        present department, with: V1::Entities::Department
       else
         error!({ error: department.errors.full_messages }, 400)
       end
@@ -52,11 +52,12 @@ class Api::V1::Sems::Departments < Grape::API
       requires :name, type: String
     end
     put ":id" do
+      authorize_admin!
       department = Department.find(params[:id])
       if department.update(
         name: params[:name]
       )
-        { message: "Department updated successfully" }
+        present department, with: V1::Entities::Department
       else
         error!({ error: department.errors.full_messages }, 400)
       end
@@ -67,6 +68,7 @@ class Api::V1::Sems::Departments < Grape::API
       requires :id, type: Integer
     end
     delete ":id" do
+      authorize_admin!
       department = Department.find(params[:id])
       if department.destroy
         { message: "Department deleted successfully" }

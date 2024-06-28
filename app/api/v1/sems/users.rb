@@ -4,13 +4,11 @@ class Api::V1::Sems::Users < Grape::API
   helpers AuthenticationHelpers
 
   resource :users do
-
     resource :instructors do
-
       desc "Get all instructors"
       get do
         instructors = Instructor.includes(:user).all
-        present instructors
+        present instructors, with: V1::Entities::Instructor
       end
 
       desc "Get instructor by id"
@@ -35,9 +33,10 @@ class Api::V1::Sems::Users < Grape::API
         requires :year_of_exp, type: Integer
       end
       post do
+        authorize_admin!
         instructor = User.new.create_instructor(params)
         if instructor.is_a?(User)
-          instructor
+          present instructor.instructor, with: V1::Entities::Instructor
         else
           error!(instructor.errors.full_messages, 400)
         end
@@ -53,6 +52,7 @@ class Api::V1::Sems::Users < Grape::API
         optional :password, type: String
       end
       put ":id" do
+        authorize_admin!
         instructor = User.new.update_instructor(params)
         if instructor
           instructor
@@ -70,15 +70,16 @@ class Api::V1::Sems::Users < Grape::API
         resource :courses do
           desc "Get all courses for an instructor"
           get do
-            course_instructor = CourseInstructor.where(instructor_id: @instructor.id)
-            course_instructor.map(&:course)
+            present @instructor.courses, with: V1::Entities::Course
           end
         end
 
+        # Teacher can see all the students assigned to him
         resource :assigned_courses do
-          desc "Get all assigned courses for an instructor"
+          desc "Get all assigned courses to a student by an instructor"
           get do
-            present @instructor.assigned_courses, with: V1::Entities::Course
+            courses = AssignedCourse.where(assigned_by_instructor_id: @instructor.id)
+            present courses, with: V1::Entities::AssignedCourse
           end
         end
       end
@@ -90,7 +91,8 @@ class Api::V1::Sems::Users < Grape::API
 
       desc "Get all students"
       get do
-        Student.includes(:user).all
+        students = Student.includes(:user).all
+        present students, with: V1::Entities::Student
       end
 
       desc "Get student by id"
@@ -98,11 +100,12 @@ class Api::V1::Sems::Users < Grape::API
         requires :id, type: Integer
       end
       get ":id" do
-        student = User.find_by(id: params[:id])
+        student = Student.find_by(user_id: params[:id])
+
         if student
-          student
+          present student, with: V1::Entities::Student
         else
-          error!({ error: "Student not found" }, 404)
+          raise ActiveRecord::RecordNotFound
         end
       end
 
@@ -115,11 +118,12 @@ class Api::V1::Sems::Users < Grape::API
         requires :department_id, type: Integer
       end
       post do
+        authorize_admin!
         student = User.new.create_student(params)
         if student.is_a?(User)
-          present student, with: V1::Entities::User
+          present Student.find_by(user_id: student.id), with: V1::Entities::Student
         else
-          error!(student.errors.full_messages, 400)
+          student
         end
       end
 
@@ -132,6 +136,7 @@ class Api::V1::Sems::Users < Grape::API
         optional :year_of_study, type: Integer
       end
       put ":id" do
+        authorize_admin!
         student = User.new.update_student(params)
         if student
           student

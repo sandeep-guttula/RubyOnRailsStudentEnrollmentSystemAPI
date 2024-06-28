@@ -7,4 +7,6 @@ class Student < ApplicationRecord
   has_many :assigned_tests
   has_many :tests, through: :assigned_tests
   has_many :student_answers
+  has_many :assigned_courses
+  has_many :courses, through: :assigned_courses
 end

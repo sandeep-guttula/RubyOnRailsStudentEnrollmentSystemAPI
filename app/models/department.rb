@@ -5,13 +5,10 @@ class Department < ApplicationRecord
   has_many :semesters
   has_one :student
 
-  validates :name, presence: true
-  validates :code, presence: true
-  validates :name, uniqueness: true
-  validates :code, uniqueness: true
-
+  validates :name, presence: true , uniqueness: true
+  validates :description, presence: true
   def create_department(params)
-    department = Department.new(name: params[:name], code: params[:code])
+    department = Department.new(name: params[:name], description: params[:description])
     if department.save
       department
     else

@@ -17,7 +17,7 @@ module AuthenticationHelpers
   end
 
   def authorize_instructor!
-    error!("Unauthorized, This can be accessed by instructors and admins only. Your role: #{Current.user.role}", 401) unless Current.user.role == "instructor" || Current.user.role == "admin"
+    error!("Unauthorized, This can be accessed by instructors only. Your role: #{Current.user.role}", 401) unless Current.user.role == "instructor"
   end
 
   def authorize_student!

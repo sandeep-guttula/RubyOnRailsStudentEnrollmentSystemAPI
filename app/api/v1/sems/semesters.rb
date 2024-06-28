@@ -32,7 +32,7 @@ class Api::V1::Sems::Semesters < Grape::API
       if semester
         present semester, with: V1::Entities::Semester
       else
-        raise ActiveRecord::RecordNotFound
+        error!({ error: "Semester not found" }, 404)
       end
     end
 
@@ -44,11 +44,13 @@ class Api::V1::Sems::Semesters < Grape::API
       requires :academic_program_id, type: Integer
     end
     post do
-
       # check if academic program exists
       academic_program = AcademicProgram.find_by(id: params[:academic_program_id])
-      if academic_program.nil?
-        error!({ error: "Academic Program not found" }, 404)
+      error!({ error: "Academic Program not found" }, 404) unless academic_program
+
+      semesters = academic_program.semesters
+      if semesters.count >= academic_program.semester_count
+        error!({ error: "Semester count exceeded for the academic program" }, 400)
       end
 
       semester = Semester.create!(semester_params)

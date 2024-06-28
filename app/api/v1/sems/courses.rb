@@ -40,7 +40,7 @@ class Api::V1::Sems::Courses < Grape::API
       if course
         present course, with: V1::Entities::Course
       else
-        raise ActiveRecord::RecordNotFound
+        error!({ error: "Course not found" }, 404)
       end
     end
 
@@ -53,6 +53,7 @@ class Api::V1::Sems::Courses < Grape::API
       requires :department_id, type: Integer
     end
     post do
+      authorize_admin!
       course = Course.new(course_params)
       if course.save
         present course, with: V1::Entities::Course
@@ -71,16 +72,8 @@ class Api::V1::Sems::Courses < Grape::API
       optional :department_id, type: Integer
     end
     put ":id" do
-      course = Course.find_by(id: params[:id])
-      if course
-        if course.update(course_params)
-          present course, with: V1::Entities::Course
-        else
-          error!({ error: course.errors.full_messages }, 400)
-        end
-      else
-
-      end
+      authorize_admin!
+      course = Course.new.update_course(params)
     end
 
     desc "Delete course"
@@ -88,16 +81,8 @@ class Api::V1::Sems::Courses < Grape::API
       requires :id, type: Integer
     end
     delete ":id" do
-      course = Course.find_by(id: params[:id])
-      if course
-        if course.destroy
-          { message: "Course deleted successfully" }
-        else
-          error!({ error: course.errors.full_messages }, 400)
-        end
-      else
-        error!({ error: "Course not found" }, 404)
-      end
+      authorize_admin!
+      course = Course.new.delete_course(id: params[:id])
     end
 
     route_param :course_id do
@@ -106,15 +91,11 @@ class Api::V1::Sems::Courses < Grape::API
         error!({ error: "Course not found" }, 404) unless @course
       end
       resource :prerequisites do
-        # before do
-        #   @course = Course.find_by(id: params[:course_id])
-        #   error!({ error: "Course not found" }, 404) unless @course
-        # end
 
         desc "Get all prerequisites for a course"
         get do
           prerequisites = @course.course_prerequisites.includes(:course, :prerequisite_course)
-          present prerequisites
+          present @course.prerequisite_courses, with: V1::Entities::Course
         end
 
         desc "Add prerequisite to a course"
@@ -142,15 +123,11 @@ class Api::V1::Sems::Courses < Grape::API
 
       # This route is for assigning instructors to a course. Accessible only by the admin only.
       resource :instructors do
-        # before do
-        #   @course = Course.find_by(id: params[:course_id])
-        #   error!({ error: "Course not found" }, 404) unless @course
-        # end
 
         desc "Get all instructors for a course"
         get do
-          instructors = @course.instructors.includes(:user)
-          present instructors, with: V1::Entities::Instructor
+          instructors = @course.instructors
+          present instructors, with: V1::Entities::User
         end
 
         desc "Add instructor to a course"
@@ -158,6 +135,7 @@ class Api::V1::Sems::Courses < Grape::API
           requires :instructor_id, type: Integer
         end
         post do
+          authorize_admin!
           course_instructor = CourseInstructor.new.add_instructor_to_course(course_id: @course.id, instructor_id: params[:instructor_id])
           if course_instructor.is_a?(CourseInstructor)
             present course_instructor, with: V1::Entities::CourseInstructor
@@ -171,20 +149,26 @@ class Api::V1::Sems::Courses < Grape::API
           requires :instructor_id, type: Integer
         end
         delete do
+          authorize_admin!
           course_instructor = CourseInstructor.new.remove_instructor_from_course(course_id: @course.id, instructor_id: params[:instructor_id])
           course_instructor
         end
       end
 
-      # This route is for assigning a course to a student by an instructor
+      # This route is for assigning a course to a student by an instructor, can be accessed by the instructor only
       resource :assign do
         desc "Assign course to the student"
         params do
           requires :student_id, type: Integer
         end
         post do
+          authorize_instructor!
           assigned_course = AssignedCourse.new.assign_course_to_student(course_id: @course.id, student_id: params[:student_id])
-          assigned_course
+          if assigned_course.is_a?(AssignedCourse)
+            present assigned_course, with: V1::Entities::AssignedCourse
+          else
+            error!({ error: assigned_course[:error] }, 400)
+          end
         end
       end
 
@@ -193,7 +177,7 @@ class Api::V1::Sems::Courses < Grape::API
         desc "Get all tests for a course"
         get do
           tests = @course.tests
-          present tests
+          present tests, with: V1::Entities::Test
         end
 
         desc "Create test for a course"
@@ -204,7 +188,13 @@ class Api::V1::Sems::Courses < Grape::API
           requires :semester_id, type: Integer
         end
         post do
+          authorize_instructor!
           test = Test.new.create_test(params)
+          if test.is_a?(Test)
+            present test, with: V1::Entities::Test
+          else
+            error!({ error: test.errors.full_messages }, 400)
+          end
         end
 
         route_param :test_id do
@@ -216,7 +206,7 @@ class Api::V1::Sems::Courses < Grape::API
             desc "Get all questions for a test"
             get do
               questions = @test.test_questions
-              present questions
+              present questions, with: V1::Entities::Question
             end
 
             desc "Add question to a test"
@@ -224,9 +214,10 @@ class Api::V1::Sems::Courses < Grape::API
               requires :question, type: String
             end
             post do
-              question = TestQuestion.new.create_question(@test.id, params[:question])
+              authorize_instructor!
+              question = TestQuestion.new.create_question(@test.id, params[:question], @course.id)
               if question.is_a?(TestQuestion)
-                present question
+                present question, with: V1::Entities::Question
               else
                 error!({ error: question[:error] }, 400)
               end
@@ -238,10 +229,11 @@ class Api::V1::Sems::Courses < Grape::API
               requires :question, type: String
             end
             put ":id" do
+              authorize_instructor!
               question = TestQuestion.find_by(id: params[:id])
               if question
                 if question.update(question: params[:question])
-                  present question
+                  present question, with: V1::Entities::Question
                 else
                   error!({ error: question.errors.full_messages }, 400)
                 end
@@ -255,23 +247,11 @@ class Api::V1::Sems::Courses < Grape::API
               requires :id, type: Integer
             end
             delete ":id" do
-              question = TestQuestion.find_by(id: params[:id])
-              if question
-                if question.destroy
-                  { message: "Question deleted successfully" }
-                else
-                  error!({ error: question.errors.full_messages }, 400)
-                end
-              else
-                error!({ error: "Question not found" }, 404)
-              end
+              authorize_instructor!
+              TestQuestion.new.delete_question(params[:id])
             end
-
           end
-
-
         end
-
       end
     end
   end

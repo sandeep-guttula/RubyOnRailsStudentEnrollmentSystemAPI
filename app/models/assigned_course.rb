@@ -9,6 +9,11 @@ class AssignedCourse < ApplicationRecord
       course = Course.find_by(id: course_id)
       student = Student.find_by(user_id: student_id)
       instructor = Instructor.find_by(user_id: Current.user.id)
+      puts "course: #{course.inspect} \n"
+      puts "student: #{student.inspect} \n"
+      puts "instructor: #{instructor.inspect} \n"
+      puts "Current.user: #{Current.user.inspect} \n"
+      puts "is_true :  #{course.department_id == instructor.department_id} \n"
       return { error: "Course not found" } unless course
       return { error: "Student not found" } unless student
 
@@ -26,6 +31,8 @@ class AssignedCourse < ApplicationRecord
         else
           assigned_course.errors.full_messages
         end
+      else
+        { error: "Your department does not match to the course department" }
       end
     else
       { error: "You are not authorized to perform this action" }

@@ -4,7 +4,5 @@ class V1::Entities::Course < Grape::Entity
   expose :description, documentation: { type: "String", desc: "Course Description" }
   expose :capacity, documentation: { type: "Integer", desc: "Course Capacity" }
   expose :self_enroll_allowed, documentation: { type: "Integer", desc: "Course Capacity" }
-  expose :department_id, documentation: { type: "Integer", desc: "Department ID" }
-  expose :created_at, documentation: { type: "DateTime", desc: "Course Created At" }
-  expose :updated_at, documentation: { type: "DateTime", desc: "Course Updated At" }
+  expose :department, using: V1::Entities::Department, as: :department
 end

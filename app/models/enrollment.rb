@@ -1,13 +1,13 @@
 class Enrollment < ApplicationRecord
-  belongs_to :student
+
+  belongs_to :user, foreign_key: :student_id
   belongs_to :semester
-  belongs_to :course_offering
-  has_one :course, through: :course_offering
+
+  has_many :assigned_courses
+  has_many :courses, through: :assigned_courses
 
   validates :student_id, presence: true
-  validates :course_offering_id, presence: true
-  validates :grade, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }, allow_nil: true
-  validates :grade, presence: true, if: :finalized?
+  validates :semester_id, presence: true
 
 end
 

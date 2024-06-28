@@ -4,8 +4,6 @@ class V1::Entities::Test < Grape::Entity
   expose :description
   expose :max_score
   expose :course_id
-  expose :semester_id
-  expose :instructor_id
-  expose :created_at
-  expose :updated_at
+  expose :semester, using: V1::Entities::Semester
+  expose :instructor, using: V1::Entities::User
 end

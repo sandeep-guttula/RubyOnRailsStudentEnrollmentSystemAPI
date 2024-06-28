@@ -98,7 +98,6 @@ class User < ApplicationRecord
       semester_id: params[:semester_id]
     )
     if user.save
-      puts "hello",user.inspect
       user
     else
       user.errors.full_messages
@@ -128,8 +127,12 @@ class User < ApplicationRecord
         started_at: nil,
         completed_at: nil
     )
-    unless enrollment.save
-      errors.add(:base, "Enrollment record could not be created")
+
+    puts "#{enrollment.inspect}"
+    if enrollment.save
+      puts "Enrollment record created successfully: #{enrollment.inspect}"
+    else
+      errors.add(:base, "Enrollment record could not be created: #{enrollment.errors.full_messages.join(', ')}")
       raise ActiveRecord::Rollback
     end
   end

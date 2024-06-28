@@ -26,7 +26,6 @@ class Course < ApplicationRecord
     department = Department.find_by(id: params[:department_id])
     return "Department not found" unless department
 
-    department
     course = Course.new(params)
     if course.save
       course
@@ -37,10 +36,21 @@ class Course < ApplicationRecord
 
   def update_course(params)
     course = Course.find_by(id: params[:id])
-    return "Course not found" unless course
+    return { error: "Course not found" } unless course
 
     if course.update(params)
       course
+    else
+      course.errors.full_messages
+    end
+  end
+
+  def delete_course(params)
+    course = Course.find_by(id: params[:id])
+    return  { error: "Course not found" } unless course
+
+    if course.destroy
+      { message: "Course deleted successfully" }
     else
       course.errors.full_messages
     end

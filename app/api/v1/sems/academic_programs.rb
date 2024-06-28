@@ -14,7 +14,6 @@ class Api::V1::Sems::AcademicPrograms < Grape::API
 
   resource :academic_programs do
 
-
     desc "Get all academic programs"
     params do
       optional :page, type: Integer, default: 1
@@ -34,7 +33,7 @@ class Api::V1::Sems::AcademicPrograms < Grape::API
       if academic_program
         present academic_program, with: V1::Entities::AcademicProgram
       else
-        raise ActiveRecord::RecordNotFound
+        error!({ error: "Academic Program not found" }, 404)
       end
     end
 
@@ -62,11 +61,13 @@ class Api::V1::Sems::AcademicPrograms < Grape::API
     end
     put ":id" do
       academic_program = AcademicProgram.find_by(id: params[:id])
+      error!({ error: "Academic Program not found" }, 404) unless academic_program
+
       if academic_program
         academic_program.update!(params)
         present academic_program, with: V1::Entities::AcademicProgram
       else
-        raise ActiveRecord::RecordNotFound
+        error!({ error: "Unable to update academic program" }, 402)
       end
     end
 
@@ -76,11 +77,11 @@ class Api::V1::Sems::AcademicPrograms < Grape::API
     end
     delete ":id" do
       academic_program = AcademicProgram.find_by(id: params[:id])
-      if academic_program
-        academic_program.destroy
-        present academic_program, with: V1::Entities::AcademicProgram
+      error!({ error: "Academic Program not found" }, 404) unless academic_program
+      if academic_program.destroy
+        { success: "Academic Program deleted" }
       else
-        raise ActiveRecord::RecordNotFound
+        error!({ error: "Unable to delete academic program" }, 402)
       end
     end
   end

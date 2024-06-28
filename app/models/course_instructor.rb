@@ -12,7 +12,9 @@ class CourseInstructor < ApplicationRecord
     instructor = Instructor.find_by(user_id: params[:instructor_id])
     return { error: "Instructor not found" } unless instructor
 
-    return { error: "Instructor already exists" } if CourseInstructor.find_by(course_id: course.id, instructor_id: instructor.id)
+    # check if the instructor is already assigned to the course
+    course_instructor = CourseInstructor.find_by(course_id: course.id, instructor_id: instructor.user_id)
+    return { error: "Instructor already assigned to the course" } if course_instructor
 
     course_instructor = CourseInstructor.new(course_id: course.id, instructor_id: params[:instructor_id])
 
