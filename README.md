@@ -43,7 +43,7 @@ In this application, administrators can create and manage departments and semest
 
 The application's database schema https://app.eraser.io/workspace/5QjQ0JjwxxGzbiOsCLxH?origin=share&elements=IVh6H0J1ROLUK3_ojVk_JA
 
-
+Postmen Collection : https://app.getpostman.com/join-team?invite_code=00aac44aa18e44e9cb361634bc6219e1&target_code=bf80169f0826608d6b7cd80b160da826
 
 
 
