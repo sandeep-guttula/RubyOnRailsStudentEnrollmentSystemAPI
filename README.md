@@ -1,24 +1,49 @@
-# README
+# Student Enrollment System
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Description
 
-Things you may want to cover:
+The Student Enrollment System manages student enrollments, courses, instructors, semesters, tests, grades, and academic programs.
 
-* Ruby version
+In this application, administrators can create and manage departments and semesters. They can assign courses to semesters and instructors to courses. Administrators can also add students and instructors. Instructors are able to assign courses only from their respective departments to students. Additionally, instructors can create tests, add questions to tests, and manage multiple tests. Students can attempt these tests by providing answers, and instructors can grade the students upon test completion. Once all tests are completed, the final score for a course that the student is enrolled in for a particular semester is calculated as the average of all test scores.
 
-* System dependencies
+## Features
 
-* Configuration
+- **Student Management**
+    - Create, update, and delete student records.
+    - Enroll students into semesters and academic programs.
 
-* Database creation
+- **Course Management**
+    - Manage courses offered by departments.
+    - Assign instructors to courses.
 
-* Database initialization
+- **Instructor Management**
+    - Add and manage instructors.
+    - Assign instructors to departments and track their experience.
 
-* How to run the test suite
+- **Semester Management**
+    - Create and manage academic semesters.
+    - Track start and end dates for semesters.
 
-* Services (job queues, cache servers, search engines, etc.)
+- **Department Management**
+    - Create departments and manage their descriptions.
 
-* Deployment instructions
+- **Test Management**
+    - Create tests within courses.
+    - Assign tests to students in semesters.
 
-* ...
+- **Grade Management**
+    - Record and calculate grades for students in courses.
+
+- **User Roles**
+    - **Admin**: Manages all aspects of the system, including users, courses, and semesters.
+    - **Instructor**: Manages courses, tests, and grades within their assigned departments.
+    - **Student**: Enrolls in courses, takes tests, and checks grades.
+
+## Schema
+
+The application's database schema https://app.eraser.io/workspace/5QjQ0JjwxxGzbiOsCLxH?origin=share&elements=IVh6H0J1ROLUK3_ojVk_JA
+
+
+
+
+
