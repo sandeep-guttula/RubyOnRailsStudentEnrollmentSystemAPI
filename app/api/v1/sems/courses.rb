@@ -193,7 +193,7 @@ class Api::V1::Sems::Courses < Grape::API
           if test.is_a?(Test)
             present test, with: V1::Entities::Test
           else
-            error!({ error: test.errors.full_messages }, 400)
+            error!({ error: test[:error] }, 400)
           end
         end
 

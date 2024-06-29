@@ -217,15 +217,23 @@ class Api::V1::Sems::Tests < Grape::API
                   end
                   post do
                     authorize_student!
-
                     student = Student.find_by(user_id: Current.user.id)
+
+                    # check if the student is assigned to the test
+
+
+                    # if student.id != @test.students.find_by(id: student.id)
+                    #   error!({ error: "You are not authorized to answer this question" }, 401)
+                    # end
+
+
                     student_answer = @question.student_answers.find_by(student_id: student.id)
                     error!({ error: "You have already answered this question" }, 400) if student_answer
 
                     answer = @question.student_answers.create!(answer: params[:answer], student_id: student.id)
 
                     if answer
-                      AssignedTest.find_by(test_id: @test.id, student_id: student.id).update!(is_attempted: true)
+                      AssignedTest.find_by(test_id: @test.id, student_id: student.id).update(is_attempted: true)
                     end
 
                     present answer, with: V1::Entities::Answer

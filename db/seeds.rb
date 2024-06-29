@@ -8,12 +8,10 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# Users.create(name: "Admin", email: "admin01@admin.com", password: "123456789", password_confirmation: "123456789", role: "admin")
+# User.create(name: "Admin", email: "admin01@admin.com", password: "123456789", password_confirmation: "123456789", role: "admin")
 # User.create(name: "Admin 02", email: "admin02@admin.com", password: "123456789", password_confirmation: "123456789", role: "admin")
-
-# seeds.rb
-
-# Define an array of department names and descriptions
+#
+#
 # departments_data = [
 #   { name: 'Computer Science', description: 'Department of Computer Science' },
 #   { name: 'Electrical Engineering', description: 'Department of Electrical Engineering' },
@@ -27,14 +25,11 @@
 #   { name: 'Psychology', description: 'Department of Psychology' }
 # ]
 #
-# # Iterate through the departments data and create records in the departments table
 # departments_data.each do |dept_data|
 #   Department.create!(dept_data)
 # end
 #
-# puts 'Seed data for departments created successfully!'
-
-# Define the academic programs names and their respective semister counts
+#
 # academic_programs = [
 #   { name: 'BTech', semester_count: 8 },
 #   { name: 'Diploma', semester_count: 6 },
@@ -48,13 +43,11 @@
 #   { name: 'MSc', semester_count: 4 }
 # ]
 #
-# # Iterate through the academic programs and create records in the academic_program table
 # academic_programs.each do |program|
 #   AcademicProgram.create!(name: program[:name], semester_count: program[:semester_count])
 # end
 #
-# puts 'Seed data for academic programs created successfully!'
-# Generate semesters for each academic program with 6 months duration
+#
 # start_date = Date.new(2024, 8, 20)
 # programs = AcademicProgram.all
 #
@@ -70,9 +63,6 @@
 #   end
 # end
 
-# db/seeds.rb
-
-# Courses
 # courses = [
 #   { title: 'Introduction to Computer Science', description: 'Basics of Computer Science', capacity: 30, self_enroll_allowed: true, department_id: 1 },
 #   { title: 'Data Structures and Algorithms', description: 'In-depth study of data structures and algorithms', capacity: 35, self_enroll_allowed: true, department_id: 1 },
@@ -102,9 +92,8 @@
 #   Course.create!(course)
 # end
 #
-# puts "Seeded #{courses.count} courses."
-
-
+#
+#
 # course_prerequisites = [
 #   { course: Course.find_by(title: 'Data Structures and Algorithms'), prerequisite_course: Course.find_by(title: 'Introduction to Computer Science') },
 #   { course: Course.find_by(title: 'Operating Systems'), prerequisite_course: Course.find_by(title: 'Data Structures and Algorithms') },
@@ -119,14 +108,11 @@
 #   { course: Course.find_by(title: 'Abnormal Psychology'), prerequisite_course: Course.find_by(title: 'Introduction to Psychology') }
 # ]
 #
+#
 # course_prerequisites.each do |prerequisite|
 #   CoursePrerequisite.create!(prerequisite)
 # end
-#
-# puts "Seeded #{course_prerequisites.count} course prerequisites."
 
-
-# CoursePrerequisite.create!(course_id: 3, prerequisite_course_id: 1)
 
 # course_instructors = [
 #   { course_id: 1, instructor_id: 3 },
@@ -174,6 +160,6 @@
 # end
 
 
-AssignedTest.create!(test_id: 10, student_id: 4, is_attempted: false)
-AssignedTest.create!(test_id: 10, student_id: 5, is_attempted: false)
-AssignedTest.create!(test_id: 10, student_id: 6, is_attempted: false)
+# AssignedTest.create!(test_id: 10, student_id: 4, is_attempted: false)
+# AssignedTest.create!(test_id: 10, student_id: 5, is_attempted: false)
+# AssignedTest.create!(test_id: 10, student_id: 6, is_attempted: false)

@@ -22,8 +22,9 @@ class Test < ApplicationRecord
       errors.add(:course_id, "Course not found") unless course
 
       if Instructor.find_by(user_id: Current.user.id).department_id != course.department_id
-        errors.add(:instructor_id, "Your department does not match to the course department")
+        return { error: "You are not authorized to create test" }
       end
+
 
       test = Test.new(params.merge(instructor_id: Current.user.id))
       if test.save

@@ -39,7 +39,8 @@ class User < ApplicationRecord
 
   def create_instructor(params)
     department = Department.find_by(id: params[:department_id])
-    return "Department not found" unless department
+    errors.add(:base, "Department not found") unless department
+
     user = User.new(
       name: params[:name],
       email: params[:email],
@@ -88,6 +89,13 @@ class User < ApplicationRecord
 
 
   def create_student(params)
+
+    department = Department.find_by(id: params[:department_id])
+    errors.add(:base, "Department not found") unless department
+
+    semester = Semester.find_by(id: params[:semester_id])
+    errors.add(:base, "Semester not found") unless semester
+
     user = User.new(
       name: params[:name],
       email: params[:email],
@@ -116,8 +124,6 @@ class User < ApplicationRecord
   end
 
   def create_enrollment_record(student)
-
-    puts "Here called : --- >"
 
     enrollment = Enrollment.new(
         student_id: student.user_id,

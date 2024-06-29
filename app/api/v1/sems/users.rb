@@ -11,6 +11,15 @@ class Api::V1::Sems::Users < Grape::API
         present instructors, with: V1::Entities::Instructor
       end
 
+
+      desc "Get current instructor courses"
+      get "courses" do
+        authorize_instructor!
+        instructor = Instructor.find_by(user_id: Current.user.id)
+        instructor_courses = CourseInstructor.where(instructor_id: Current.user.id)
+        present instructor_courses, with: V1::Entities::InstructorCourse
+      end
+
       desc "Get instructor by id"
       params do
         requires :id, type: Integer
@@ -18,7 +27,7 @@ class Api::V1::Sems::Users < Grape::API
       get ":id" do
         instructor = Instructor.find_by(id: params[:id])
         if instructor
-          instructor
+          present instructor, with: V1::Entities::Instructor
         else
           error!({ error: "Instructor not found" }, 404)
         end
@@ -34,6 +43,11 @@ class Api::V1::Sems::Users < Grape::API
       end
       post do
         authorize_admin!
+
+        if User.find_by(email: params[:email])
+          error!({ error: "Email already exists" }, 400)
+        end
+
         instructor = User.new.create_instructor(params)
         if instructor.is_a?(User)
           present instructor.instructor, with: V1::Entities::Instructor
@@ -95,6 +109,21 @@ class Api::V1::Sems::Users < Grape::API
         present students, with: V1::Entities::Student
       end
 
+      desc "Get all courses for a student"
+      get "courses" do
+        authorize_student!
+        student = Student.find_by(user_id: Current.user.id)
+        semester = Semester.find_by(id: student.semester_id)
+        present semester.courses, with: V1::Entities::Course
+      end
+
+      desc "Get all courses for a student assigned by an instructor"
+      get "assigned_courses" do
+        authorize_student!
+        assigned_courses = AssignedCourse.where(student_id: Current.user.id)
+        present assigned_courses, with: V1::Entities::AssignedCourse
+      end
+
       desc "Get student by id"
       params do
         requires :id, type: Integer
@@ -105,7 +134,7 @@ class Api::V1::Sems::Users < Grape::API
         if student
           present student, with: V1::Entities::Student
         else
-          raise ActiveRecord::RecordNotFound
+          error!({ error: "Student not found" }, 404)
         end
       end
 
@@ -119,11 +148,20 @@ class Api::V1::Sems::Users < Grape::API
       end
       post do
         authorize_admin!
+
+        if User.find_by(email: params[:email])
+          error!({ error: "Email already exists" }, 400)
+        end
+
         student = User.new.create_student(params)
         if student.is_a?(User)
           present Student.find_by(user_id: student.id), with: V1::Entities::Student
         else
-          student
+          if student.errors.full_messages.include?("Department not found")
+            error!({ error: "Department not found" }, 400)
+          else
+            error!(student.errors.full_messages, 400)
+          end
         end
       end
 

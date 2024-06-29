@@ -17,7 +17,6 @@ class CourseInstructor < ApplicationRecord
     return { error: "Instructor already assigned to the course" } if course_instructor
 
     course_instructor = CourseInstructor.new(course_id: course.id, instructor_id: params[:instructor_id])
-
     if course_instructor.save
       course_instructor
     else
