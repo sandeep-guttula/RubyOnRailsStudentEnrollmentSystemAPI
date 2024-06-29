@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_06_26_195654) do
+ActiveRecord::Schema[7.2].define(version: 2024_06_29_085227) do
   create_table "academic_programs", force: :cascade do |t|
     t.string "name"
     t.integer "semester_count"
@@ -188,7 +188,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_06_26_195654) do
   add_foreign_key "assigned_tests", "tests"
   add_foreign_key "assigned_tests", "users", column: "student_id"
   add_foreign_key "course_instructors", "courses"
-  add_foreign_key "course_instructors", "instructors"
+  add_foreign_key "course_instructors", "users", column: "instructor_id"
   add_foreign_key "course_offerings", "courses"
   add_foreign_key "course_offerings", "departments"
   add_foreign_key "course_offerings", "semesters"
@@ -203,7 +203,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_06_26_195654) do
   add_foreign_key "student_answers", "test_questions"
   add_foreign_key "student_answers", "users", column: "student_id"
   add_foreign_key "student_grades", "courses"
-  add_foreign_key "student_grades", "students"
+  add_foreign_key "student_grades", "users", column: "student_id"
   add_foreign_key "students", "departments"
   add_foreign_key "students", "semesters"
   add_foreign_key "students", "users"

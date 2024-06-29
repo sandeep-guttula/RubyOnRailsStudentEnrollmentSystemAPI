@@ -2,7 +2,7 @@ class Test < ApplicationRecord
   belongs_to :course
   belongs_to :semester
   belongs_to :instructor, class_name: "User", foreign_key: "instructor_id"
-  has_many :assigned_tests
+  has_many :assigned_tests, dependent: :destroy
   has_many :students, through: :assigned_tests
   has_many :test_questions, dependent: :destroy
 
@@ -42,9 +42,9 @@ class Test < ApplicationRecord
     students = Semester.find(self.semester_id).students
     students.each do |student|
       begin
-        self.assigned_tests.create!(student_id: student.id, is_attempted: false)
+        self.assigned_tests.create!(student_id: student.user_id, is_attempted: false)
       rescue ActiveRecord::RecordInvalid => e
-        puts "Failed to assign test to student #{student.user_id}: #{e.message}"
+        puts "Failed to assign test to student #{student.user_id}: #{e.message} "
       end
     end
   end

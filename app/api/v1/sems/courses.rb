@@ -172,8 +172,8 @@ class Api::V1::Sems::Courses < Grape::API
         end
       end
 
-      resource :tests do
 
+      resource :tests do
         desc "Get all tests for a course"
         get do
           tests = @course.tests

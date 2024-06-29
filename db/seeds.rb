@@ -128,18 +128,16 @@
 #
 # puts "Seeded #{course_instructors.count} course instructors."
 
-# course_offerings = [
-#   { course_id: 1, semester_id: 57, instructor_id: 4, department_id: 1 },
-#   { course_id: 2, semester_id: 57, instructor_id: 5, department_id: 1 },
-#   { course_id: 3, semester_id: 57, instructor_id: 6, department_id: 1 },
-#   { course_id: 4, semester_id: 58, instructor_id: 7, department_id: 1 },
-#   { course_id: 5, semester_id: 58, instructor_id: 8, department_id: 1 },
-#   { course_id: 6, semester_id: 58, instructor_id: 4, department_id: 2 }
-# ]
-#
-# course_offerings.each do |course_offering|
-#   CourseOffering.create!(course_offering)
-# end
+course_offerings = [
+  { course_id: 1, semester_id: 1, department_id: 1 },
+  { course_id: 2, semester_id: 1, department_id: 1 },
+  { course_id: 3, semester_id: 1, department_id: 1 },
+  { course_id: 4, semester_id: 2, department_id: 2 }
+]
+
+course_offerings.each do |course_offering|
+  CourseOffering.create!(course_offering)
+end
 
 # grades = [
 #   { grade: "B", start_from: 80, ends_at: 89 },

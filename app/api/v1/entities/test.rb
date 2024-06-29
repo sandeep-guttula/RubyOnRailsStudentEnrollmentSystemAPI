@@ -1,5 +1,5 @@
 class V1::Entities::Test < Grape::Entity
-  expose :id
+  expose :id, if: { type: :full }
   expose :name
   expose :description
   expose :max_score

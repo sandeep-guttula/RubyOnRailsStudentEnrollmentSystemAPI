@@ -9,13 +9,10 @@ class AssignedCourse < ApplicationRecord
       course = Course.find_by(id: course_id)
       student = Student.find_by(user_id: student_id)
       instructor = Instructor.find_by(user_id: Current.user.id)
-      puts "course: #{course.inspect} \n"
-      puts "student: #{student.inspect} \n"
-      puts "instructor: #{instructor.inspect} \n"
-      puts "Current.user: #{Current.user.inspect} \n"
-      puts "is_true :  #{course.department_id == instructor.department_id} \n"
       return { error: "Course not found" } unless course
       return { error: "Student not found" } unless student
+
+      return { error: "Your department does not match to the course department" } unless course.department_id == instructor.department_id
 
       # check if the course is already assigned to the student
       return { error: "Course already assigned to the student" } if AssignedCourse.find_by(course_id: course_id, student_id: student_id)

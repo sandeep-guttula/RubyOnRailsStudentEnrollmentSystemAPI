@@ -16,6 +16,9 @@ class CourseInstructor < ApplicationRecord
     course_instructor = CourseInstructor.find_by(course_id: course.id, instructor_id: instructor.user_id)
     return { error: "Instructor already assigned to the course" } if course_instructor
 
+    # check if the instructor and course department are same
+    return { error: "Instructor and course department are not same" } if course.department_id != instructor.department_id
+
     course_instructor = CourseInstructor.new(course_id: course.id, instructor_id: params[:instructor_id])
     if course_instructor.save
       course_instructor
